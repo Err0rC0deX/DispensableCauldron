@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "dispensable-cauldron",
+  "version": "${version}",
+
+  "name": "DispensableCauldron",
+  "description": "Fabric mod to allow dispensers to interact with cauldrons.",
+  "authors": ["Err0rC0deX"],
+  "contact": {
+    "homepage": "https://github.com/Err0rC0deX/DispensableCauldron",
+    "sources": "https://github.com/Err0rC0deX/DispensableCauldron"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.fabricmc.err.dispensablecauldron.DispensableCauldron"
+    ]
+  },
+  
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+
+  "suggests": {
+    "another-mod": "*"
+  }
+}
