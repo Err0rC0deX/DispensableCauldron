@@ -1,4 +1,5 @@
 plugins {
+	id 'java'
 	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 }
@@ -51,26 +52,5 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-			pom {
-				name = 'DispensableCauldron'
-				description = 'Fabric mod to allow dispensers to interact with cauldrons.'
-				url = 'https://github.com/Err0rC0deX/DispensableCauldron'
-			}
-		}
-	}
-
-	repositories {
-		maven {
-			name = 'Local'
-			url = layout.buildDirectory.dir("repo")
-		}
 	}
 }

@@ -14,7 +14,7 @@ public class Enable implements Command<ServerCommandSource>
 	@Override
 	public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
 	{
-		context.getSource().sendFeedback(Text.literal("enabled: " + Config.enable()), false);
+		context.getSource().sendFeedback(() -> Text.literal("enabled: " + Config.enable()), false);
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -24,7 +24,7 @@ public class Enable implements Command<ServerCommandSource>
 		{
 			Config.enable(value);
 			Config.write();
-			context.getSource().sendFeedback(Text.literal("enabled: " + Config.enable()), true);
+			context.getSource().sendFeedback(() -> Text.literal("enabled: " + Config.enable()), true);
 		}
 		return Command.SINGLE_SUCCESS;
 	}

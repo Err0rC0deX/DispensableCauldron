@@ -14,9 +14,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.LavaCauldronBlock;
 import net.minecraft.block.LeveledCauldronBlock;
-import net.minecraft.block.PowderSnowCauldronBlock;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.DispenserBlockEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPointer;
@@ -35,8 +35,13 @@ public abstract class ItemDispenserBehaviorMixin
 	public ItemStack drainCauldron(AbstractCauldronBlock cauldron, ServerWorld world, BlockPointer pointer, BlockPos position, ItemStack stack)
 	{
 		ItemStack newItemstack = new ItemStack(Items.WATER_BUCKET);
-		if(cauldron instanceof PowderSnowCauldronBlock) newItemstack = new ItemStack(Items.POWDER_SNOW_BUCKET);
-		else if(cauldron instanceof LavaCauldronBlock) newItemstack = new ItemStack(Items.LAVA_BUCKET);
+
+		if (cauldron instanceof LavaCauldronBlock) newItemstack = new ItemStack(Items.LAVA_BUCKET);
+		else
+		{
+			BlockState cauldronState  = world.getBlockState(position);
+			if (cauldronState.getFluidState().getFluid().matchesType(Fluids.WATER) == false) newItemstack = new ItemStack(Items.POWDER_SNOW_BUCKET);
+		}
 		Item newItem = newItemstack.getItem();
 
 		updateCauldron(world, position, Blocks.CAULDRON.getDefaultState());
@@ -44,7 +49,7 @@ public abstract class ItemDispenserBehaviorMixin
 		stack.decrement(1);
 		if (stack.isEmpty()) return new ItemStack(newItem);
 
-		if (((DispenserBlockEntity)pointer.getBlockEntity()).addToFirstFreeSlot(new ItemStack(newItem)) < 0)
+		if (((DispenserBlockEntity)pointer.blockEntity()).addToFirstFreeSlot(new ItemStack(newItem)) < 0)
 		{
 			ItemDispenserBehavior fallbackBehavior = new ItemDispenserBehavior();
 			fallbackBehavior.dispense(pointer, new ItemStack(newItem));
@@ -70,8 +75,8 @@ public abstract class ItemDispenserBehaviorMixin
 		if (Config.enable())
 		{
 			BlockPos position;
-			ServerWorld world = pointer.getWorld();
-			BlockState blockState = world.getBlockState(position = pointer.getPos().offset(pointer.getBlockState().get(DispenserBlock.FACING)));
+			ServerWorld world = pointer.world();
+			BlockState blockState = world.getBlockState(position = pointer.pos().offset(pointer.state().get(DispenserBlock.FACING)));
 			Block block = blockState.getBlock();
 			Item usedItem = stack.getItem();
 
